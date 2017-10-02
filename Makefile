@@ -42,7 +42,7 @@ test-unit: ## Run the unit testsuite.
 	${DOCKER_RUN} vendor/bin/phpunit --testsuite unit
 
 test-lowest: ## Test using the lowest possible versions of the dependencies
-test-lowest: PREFER_LOWEST='--prefer-lowest --prefer-stable'
+test-lowest: PREFER_LOWEST=--prefer-lowest --prefer-stable
 test-lowest: build-update test
 
 test-matrix: ## Run the unit tests against multiple targets.
