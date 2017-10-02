@@ -1,0 +1,49 @@
+{
+  "name": "graze/config-validation",
+  "description": "validate and populate arrays and objects",
+  "keywords": [
+    "graze",
+    "config-validation"
+  ],
+  "homepage": "https://github.com/graze/config-validation",
+  "license": "MIT",
+  "config": {
+    "platform": {
+      "php": "7.1"
+    }
+  },
+  "authors": [
+    {
+      "name": "Harry Bragg",
+      "email": "harry.bragg@graze.com",
+      "role": "Developer"
+    },
+    {
+      "name": "Graze Developers",
+      "email": "developers@graze.com",
+      "homepage": "http://www.graze.com",
+      "role": "Development Team"
+    }
+  ],
+  "require": {
+    "php": "^5.6 | ^7.0",
+    "respect/validation": "^1.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^4.2 | ^5.2",
+    "squizlabs/php_codesniffer": "^3",
+    "graze/standards": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Graze\\ConfigValidation\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Graze\\ConfigValidation\\Test\\": "tests/src",
+      "Graze\\ConfigValidation\\Test\\Unit\\": "tests/unit",
+      "Graze\\ConfigValidation\\Test\\Integration\\": "tests/integration"
+    }
+  }
+}
