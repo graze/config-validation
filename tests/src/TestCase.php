@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  *
  * @license https://github.com/graze/config-validation/blob/master/LICENSE.md
- * @link https://github.com/graze/config-validation
+ * @link    https://github.com/graze/config-validation
  */
 
 namespace Graze\ConfigValidation\Test;

@@ -14,7 +14,7 @@ php:
   - nightly
 
 env:
-  - PREFER_LOWEST=--prefer-lowest
+  - PREFER_LOWEST=--prefer-lowest --prefer-stable
   - PREFER_LOWEST=
 
 matrix:

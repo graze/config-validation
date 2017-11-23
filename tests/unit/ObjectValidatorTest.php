@@ -1,4 +1,15 @@
 <?php
+/**
+ * This file is part of graze/config-validation.
+ *
+ * Copyright (c) 2017 Nature Delivered Ltd. <https://www.graze.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license https://github.com/graze/config-validation/blob/master/LICENSE.md
+ * @link    https://github.com/graze/config-validation
+ */
 
 namespace Graze\ConfigValidation\Test\Unit;
 
@@ -49,10 +60,14 @@ class ObjectValidatorTest extends TestCase
             ->optional('defaults->group', v::stringType(), 'group')
             ->required('must', v::stringType()->equals('be here'));
 
-        $this->assertTrue($validator->isValid($input));
+        $this->assertTrue($validator->isValid($input), 'The input should be valid');
         $actual = $validator->validate($input);
 
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals(
+            $expected,
+            $actual,
+            'the generated output should be the same as the expected object'
+        );
     }
 
     /**
