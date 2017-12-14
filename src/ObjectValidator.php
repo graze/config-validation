@@ -20,7 +20,6 @@ use Respect\Validation\Rules\Attribute;
 use Respect\Validation\Validatable;
 use Respect\Validation\Validator as v;
 use stdClass;
-use Throwable;
 
 class ObjectValidator implements ConfigValidatorInterface
 {
@@ -40,7 +39,8 @@ class ObjectValidator implements ConfigValidatorInterface
     public function __construct($allowUnspecified = true)
     {
         $this->allowUnspecified = $allowUnspecified;
-        $this->separator = static::SEPARATOR;
+        $this->definition = new Definition();
+        $this->setSeparator(static::SEPARATOR);
     }
 
     /**
@@ -53,12 +53,12 @@ class ObjectValidator implements ConfigValidatorInterface
     {
         $validators = [];
         foreach ($definition as $key => $node) {
-            if (isset($node['required'])) {
+            if ($node instanceof Leaf) {
                 $validators[] = (new Attribute(
                     $key,
-                    (isset($node['validator']) ? $node['validator'] : null),
-                    $node['required']
-                ))->setName($namePrefix . $this->separator. $key);
+                    $node->getValidator(),
+                    $node->isRequired()
+                ))->setName($namePrefix . $this->separator . $key);
             } else {
                 $validators[] = (new Attribute(
                     $key,
@@ -81,7 +81,7 @@ class ObjectValidator implements ConfigValidatorInterface
      */
     public function populate($item)
     {
-        return $this->populateObjectItems($item, $this->validators);
+        return $this->populateObjectItems($item, $this->definition->getAll());
     }
 
     /**
@@ -94,9 +94,9 @@ class ObjectValidator implements ConfigValidatorInterface
     {
         $output = clone $object;
         foreach ($definition as $key => $node) {
-            if (isset($node['required'])) {
-                if ((!$node['required']) && (!isset($output->{$key}))) {
-                    $output->{$key} = $node['default'];
+            if ($node instanceof Leaf) {
+                if ((!$node->isRequired()) && (!isset($output->{$key}))) {
+                    $output->{$key} = $node->getDefault();
                 }
             } else {
                 if (!isset($output->{$key})) {

@@ -19,21 +19,15 @@ use Respect\Validation\Validator as v;
 trait ValidatorBuilderTrait
 {
     /** @var string */
-    protected $separator = '.';
+    protected $separator;
 
-    /**
-     * @var array [path][here]['required' => bool, 'validator' => Validator, 'default' => mixed]
-     */
-    protected $validators = [];
+    /** @var Definition */
+    protected $definition;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $dirty = true;
 
-    /**
-     * @var Validatable[]
-     */
+    /** @var Validatable[] */
     protected $validator = [];
 
     /**
@@ -46,17 +40,15 @@ trait ValidatorBuilderTrait
      */
     protected function addValidator($path, $required, Validatable $validator = null, $default = null)
     {
-        $parent = &$this->validators;
-        foreach (explode($this->separator, $path) as $node) {
-            if (!isset($parent[$node])) {
-                $parent[$node] = [];
-            }
-            $parent = &$parent[$node];
+        if ($this->definition->has($path)) {
+            /** @var Leaf $leaf */
+            $leaf = $this->definition->get($path);
+            $leaf->setRequired($required)
+                 ->setValidator($validator)
+                 ->setDefault($default);
+        } else {
+            $this->definition->set($path, new Leaf($required, $validator, $default));
         }
-
-        $parent['required'] = $required;
-        $parent['validator'] = $validator;
-        $parent['default'] = $default;
 
         $this->dirty = true;
 
@@ -100,7 +92,7 @@ trait ValidatorBuilderTrait
     public function getValidator($name = '')
     {
         if ($this->dirty || !isset($this->validator[$name]) || $this->validator[$name] == null) {
-            $this->validator[$name] = $this->buildValidator($this->validators, $name);
+            $this->validator[$name] = $this->buildValidator($this->definition->getAll(), $name);
             $this->dirty = false;
         }
 
@@ -123,6 +115,7 @@ trait ValidatorBuilderTrait
     public function setSeparator($separator)
     {
         $this->separator = $separator;
+        $this->definition->setDelimiter($separator);
         return $this;
     }
 
@@ -144,8 +137,8 @@ trait ValidatorBuilderTrait
     protected function hasMandatoryItem(array $definition)
     {
         foreach ($definition as $key => $node) {
-            if (isset($node['required'])) {
-                if ($node['required']) {
+            if ($node instanceof Leaf) {
+                if ($node->isRequired()) {
                     return true;
                 }
             } else {

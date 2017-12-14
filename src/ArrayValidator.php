@@ -41,7 +41,8 @@ class ArrayValidator implements ConfigValidatorInterface
     public function __construct($allowUnspecified = true)
     {
         $this->allowUnspecified = $allowUnspecified;
-        $this->separator = static::SEPARATOR;
+        $this->definition = new Definition();
+        $this->setSeparator(static::SEPARATOR);
     }
 
     /**
@@ -54,11 +55,11 @@ class ArrayValidator implements ConfigValidatorInterface
     {
         $validators = [];
         foreach ($definition as $key => $node) {
-            if (isset($node['required'])) {
+            if ($node instanceof Leaf) {
                 $validators[] = (new Key(
                     $key,
-                    (isset($node['validator']) ? $node['validator'] : null),
-                    $node['required']
+                    $node->getValidator(),
+                    $node->isRequired()
                 ))->setName($namePrefix . $this->separator . $key);
             } else {
                 $validators[] = (new Key(
@@ -82,7 +83,7 @@ class ArrayValidator implements ConfigValidatorInterface
      */
     public function populate($item)
     {
-        return $this->populateItems($item, $this->validators);
+        return $this->populateItems($item, $this->definition->getAll());
     }
 
     /**
@@ -95,9 +96,9 @@ class ArrayValidator implements ConfigValidatorInterface
     {
         $output = $array;
         foreach ($definition as $key => $node) {
-            if (isset($node['required'])) {
-                if ((!$node['required']) && (!isset($output[$key]))) {
-                    $output[$key] = $node['default'];
+            if ($node instanceof Leaf) {
+                if ((!$node->isRequired()) && (!isset($output[$key]))) {
+                    $output[$key] = $node->getDefault();
                 }
             } else {
                 if (!isset($output[$key])) {

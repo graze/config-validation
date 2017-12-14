@@ -3,7 +3,7 @@ SHELL = /bin/sh
 DOCKER ?= $(shell which docker)
 VOLUME := /srv
 IMAGE ?= graze/php-alpine:test
-DOCKER_RUN := ${DOCKER} run --rm -t -v $$(pwd):${VOLUME} -w ${VOLUME} ${IMAGE}
+DOCKER_RUN := ${DOCKER} run --rm -t -v $$(pwd):${VOLUME}:cached -w ${VOLUME} ${IMAGE}
 
 PREFER_LOWEST ?=
 
@@ -23,8 +23,8 @@ build-update: ## Update all dependencies
 
 composer-%: ## Run a composer command, `make "composer-<command> [...]"`.
 	${DOCKER} run -t --rm \
-        -v $$(pwd):/app \
-        -v ~/.composer:/tmp \
+        -v $$(pwd):/app:delegated \
+        -v ~/.composer:/tmp:delegated \
         composer --ansi --no-interaction $* $(filter-out $@,$(MAKECMDGOALS))
 
 # Testing
@@ -49,6 +49,7 @@ test-matrix: ## Run the unit tests against multiple targets.
 	${MAKE} IMAGE="php:5.6-alpine" test
 	${MAKE} IMAGE="php:7.0-alpine" test
 	${MAKE} IMAGE="php:7.1-alpine" test
+	${MAKE} IMAGE="php:7.2-alpine" test
 	${MAKE} IMAGE="hhvm/hhvm:latest" test
 
 test-matrix-lowest: ## Run the unit tests against
