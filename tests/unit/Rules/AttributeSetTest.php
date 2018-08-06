@@ -15,7 +15,7 @@ namespace Graze\ConfigValidation\Test\Unit\Rules;
 
 use Graze\ConfigValidation\Exceptions\AttributeSetException;
 use Graze\ConfigValidation\Rules\AttributeSet;
-use PHPUnit_Framework_TestCase as TestCase;
+use Graze\ConfigValidation\Test\TestCase;
 use Respect\Validation\Rules\AllOf;
 use Respect\Validation\Rules\AlwaysValid;
 use Respect\Validation\Rules\Attribute;
@@ -91,7 +91,7 @@ class AttributeSetTest extends TestCase
 
     public function testShouldValidateAttributesWhenThereAreMissingRequiredAttributes()
     {
-        $input = (object)[
+        $input = (object) [
             'foo' => 42,
         ];
 
@@ -105,7 +105,7 @@ class AttributeSetTest extends TestCase
 
     public function testShouldValidateAttributesWhenThereAreMissingNonRequiredAttributes()
     {
-        $input = (object)[
+        $input = (object) [
             'foo' => 42,
         ];
 
@@ -119,7 +119,7 @@ class AttributeSetTest extends TestCase
 
     public function testShouldValidateAttributesWhenThereAreMoreAttributes()
     {
-        $input = (object)[
+        $input = (object) [
             'foo' => 42,
             'bar' => 'String',
             'baz' => false,
@@ -135,7 +135,7 @@ class AttributeSetTest extends TestCase
 
     public function testShouldValidateAttributesWhenEmpty()
     {
-        $input = (object)[];
+        $input = (object) [];
 
         $attribute1 = new Attribute('foo', new AlwaysValid(), true);
         $attribute2 = new Attribute('bar', new AlwaysValid(), true);
@@ -151,7 +151,7 @@ class AttributeSetTest extends TestCase
      */
     public function testShouldCheckAttributesAndUseChildValidators()
     {
-        $input = (object)[];
+        $input = (object) [];
 
         $attribute1 = new Attribute('foo', new AlwaysValid(), true);
         $attribute2 = new Attribute('bar', new AlwaysValid(), true);
@@ -162,7 +162,7 @@ class AttributeSetTest extends TestCase
 
     public function testShouldAssertGetAttributesInException()
     {
-        $input = (object)[
+        $input = (object) [
             'foo' => 42,
             'bar' => 'String',
             'baz' => false,
@@ -191,7 +191,7 @@ ERR
 
     public function testShouldAssertGetRequiredMissingInException()
     {
-        $input = (object)[];
+        $input = (object) [];
 
         $attribute1 = new Attribute('foo', new AlwaysValid(), true);
         $attribute2 = new Attribute('bar', new AlwaysValid(), false);
@@ -216,7 +216,7 @@ ERR
 
     public function testShouldAcceptArrayOfAttributes()
     {
-        $input = (object)[
+        $input = (object) [
             'foo' => 42,
         ];
 
@@ -230,7 +230,7 @@ ERR
 
     public function testShouldByAbleToAssert()
     {
-        $input = (object)[
+        $input = (object) [
             'foo' => 42,
         ];
 
@@ -239,6 +239,6 @@ ERR
 
         $attributeSet = new AttributeSet($attribute1, $attribute2);
 
-        $attributeSet->assert($input);
+        $this->assertTrue($attributeSet->assert($input));
     }
 }

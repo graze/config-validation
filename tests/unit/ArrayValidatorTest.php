@@ -168,4 +168,19 @@ class ArrayValidatorTest extends TestCase
         $this->assertFalse($validator->isValid(['default' => 'nope']));
         $this->assertFalse($validator->isValid([]));
     }
+
+    public function testChildBuilders()
+    {
+        $validator = (new ArrayValidator())
+            ->required('default.stuff')
+            ->addChild(
+                'default.thing',
+                (new ArrayValidator())
+                    ->required('cake')
+                    ->optional('moon')
+            );
+
+        $this->assertFalse($validator->isValid(['default' => ['stuff' => 1]]));
+        $this->assertTrue($validator->isValid(['default' => ['stuff' => 1, 'thing' => ['cake' => 'yup']]]));
+    }
 }
