@@ -37,7 +37,7 @@ $validator = (new ArrayValidator())
 ```php
 $validator = Validator::arr()
     ->required('key', v::stringType())
-    ->optional('parent', Validator::arr()
+    ->addChild('parent', Validator::arr()
         ->optional('child', v::intVal(), 1)
         ->optional('second', v::stringType()->date()
     );
