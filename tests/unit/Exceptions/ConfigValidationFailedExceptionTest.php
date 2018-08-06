@@ -27,7 +27,7 @@ class ConfigValidationFailedExceptionTest extends TestCase
 
         $this->assertEquals(
             <<<TEXT
-Processor 'Graze\ConfigValidation\Test\Unit\Exceptions\ConfigValidationFailedExceptionTest' failed validation. Check params and options
+Processor 'Graze\ConfigValidation\Test\Unit\Exceptions\ConfigValidationFailedExceptionTest' failed validation
 test message
 TEXT
             ,

@@ -19,12 +19,19 @@ use Respect\Validation\Validatable;
 interface ConfigValidatorInterface
 {
     /**
+     * Get the build context for a builder
+     *
+     * @return array
+     */
+    public function getBuildContext();
+
+    /**
      * The specified path is a required field for the
      *
      * @param string      $path
      * @param Validatable $validator
      *
-     * @return mixed
+     * @return $this
      */
     public function required($path, Validatable $validator = null);
 
@@ -33,9 +40,19 @@ interface ConfigValidatorInterface
      * @param Validatable $validator
      * @param mixed       $default
      *
-     * @return mixed
+     * @return $this
      */
     public function optional($path, Validatable $validator = null, $default = null);
+
+    /**
+     * Add a child builder
+     *
+     * @param string                   $path
+     * @param ConfigValidatorInterface $childConfig
+     *
+     * @return $this
+     */
+    public function addChild($path, ConfigValidatorInterface $childConfig);
 
     /**
      * @param string $name

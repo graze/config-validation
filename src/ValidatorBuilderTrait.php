@@ -37,6 +37,14 @@ trait ValidatorBuilderTrait
     protected $validator = [];
 
     /**
+     * @return mixed
+     */
+    public function getBuildContext()
+    {
+        return $this->validators;
+    }
+
+    /**
      * @param string           $path
      * @param bool             $required
      * @param Validatable|null $validator
@@ -57,6 +65,30 @@ trait ValidatorBuilderTrait
         $parent['required'] = $required;
         $parent['validator'] = $validator;
         $parent['default'] = $default;
+
+        $this->dirty = true;
+
+        return $this;
+    }
+
+    /**
+     * @param string                   $path
+     * @param ConfigValidatorInterface $childConfig
+     *
+     * @return $this
+     */
+    public function addChild($path, ConfigValidatorInterface $childConfig)
+    {
+
+        $parent = &$this->validators;
+        foreach (explode($this->separator, $path) as $node) {
+            if (!isset($parent[$node])) {
+                $parent[$node] = [];
+            }
+            $parent = &$parent[$node];
+        }
+
+        $parent = $childConfig->getBuildContext();
 
         $this->dirty = true;
 

@@ -27,8 +27,9 @@ class ConfigValidationFailedException extends Exception
      */
     public function __construct($processorClass, $message, Exception $e = null)
     {
-        $newMessage = "Processor '$processorClass' failed validation. Check params and options\n";
+        $newMessage = "Processor '$processorClass' failed validation\n";
         if ($e instanceof NestedValidationException) {
+            $newMessage .= "\n" . $e->getFullMessage() . "\n";
             $newMessage .= $this->getNestedMessage($e);
         } else {
             $newMessage .= $e->getMessage();

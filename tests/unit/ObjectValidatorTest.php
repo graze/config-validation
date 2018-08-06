@@ -77,16 +77,16 @@ class ObjectValidatorTest extends TestCase
     {
         return [
             [
-                (object)['must' => 'be here'],
-                (object)['must' => 'be here', 'defaults' => (object)['path' => '/some/path', 'group' => 'group']],
+                (object) ['must' => 'be here'],
+                (object) ['must' => 'be here', 'defaults' => (object) ['path' => '/some/path', 'group' => 'group']],
             ],
             [
-                (object)['must' => 'be here', 'defaults' => (object)['path' => '/a/path']],
-                (object)['must' => 'be here', 'defaults' => (object)['path' => '/a/path', 'group' => 'group']],
+                (object) ['must' => 'be here', 'defaults' => (object) ['path' => '/a/path']],
+                (object) ['must' => 'be here', 'defaults' => (object) ['path' => '/a/path', 'group' => 'group']],
             ],
             [
-                (object)['must' => 'be here', 'other' => 'cake'],
-                (object)['must' => 'be here', 'defaults' => (object)['path' => '/some/path', 'group' => 'group'], 'other' => 'cake'],
+                (object) ['must' => 'be here', 'other' => 'cake'],
+                (object) ['must' => 'be here', 'defaults' => (object) ['path' => '/some/path', 'group' => 'group'], 'other' => 'cake'],
             ],
         ];
     }
@@ -116,10 +116,10 @@ class ObjectValidatorTest extends TestCase
     public function invalidDataProvider()
     {
         return [
-            [(object)['must' => 'be here', 'defaults' => (object)['path' => 1]]],
-            [(object)['must' => 'be here', 'defaults' => (object)['group' => 2]]],
-            [(object)['must' => 'be here', 'defaults' => 'monkey']],
-            [(object)['must' => 'be here', 'defaults' => (object)['path' => ['idea' => 'poop']]]],
+            [(object) ['must' => 'be here', 'defaults' => (object) ['path' => 1]]],
+            [(object) ['must' => 'be here', 'defaults' => (object) ['group' => 2]]],
+            [(object) ['must' => 'be here', 'defaults' => 'monkey']],
+            [(object) ['must' => 'be here', 'defaults' => (object) ['path' => ['idea' => 'poop']]]],
             [[]],
         ];
     }
@@ -149,8 +149,23 @@ class ObjectValidatorTest extends TestCase
     public function doNotAllowUnspecifiedData()
     {
         return [
-            [(object)['stuff', 'monkey']],
-            [(object)['stuff', 'cake' => 4, 'poop']],
+            [(object) ['stuff', 'monkey']],
+            [(object) ['stuff', 'cake' => 4, 'poop']],
         ];
+    }
+
+    public function testChildBuilders()
+    {
+        $validator = (new ObjectValidator())
+            ->required('default->stuff')
+            ->addChild(
+                'default->thing',
+                (new ObjectValidator())
+                    ->required('cake')
+                    ->optional('moon')
+            );
+
+        $this->assertFalse($validator->isValid((object) ['default' => (object) ['stuff' => 1]]));
+        $this->assertTrue($validator->isValid((object) ['default' => (object) ['stuff' => 1, 'thing' => (object) ['cake' => 'yup']]]));
     }
 }
