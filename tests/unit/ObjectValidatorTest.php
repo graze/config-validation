@@ -97,7 +97,6 @@ class ObjectValidatorTest extends TestCase
      * @param object $input
      *
      * @throws \Graze\ConfigValidation\Exceptions\ConfigValidationFailedException
-     * @expectedException \Graze\ConfigValidation\Exceptions\ConfigValidationFailedException
      */
     public function testFailedValidation($input)
     {
@@ -107,6 +106,8 @@ class ObjectValidatorTest extends TestCase
             ->required('must', v::stringType()->equals('be here'));
 
         $this->assertFalse($validator->isValid($input));
+
+        $this->expectException(\Graze\ConfigValidation\Exceptions\ConfigValidationFailedException::class);
         $validator->validate($input);
     }
 
@@ -130,7 +131,6 @@ class ObjectValidatorTest extends TestCase
      * @param object $input
      *
      * @throws \Graze\ConfigValidation\Exceptions\ConfigValidationFailedException
-     * @expectedException \Graze\ConfigValidation\Exceptions\ConfigValidationFailedException
      */
     public function testDoNotAllowUnspecified($input)
     {
@@ -140,6 +140,7 @@ class ObjectValidatorTest extends TestCase
 
         $this->assertFalse($validator->isAllowUnspecified());
 
+        $this->expectException(\Graze\ConfigValidation\Exceptions\ConfigValidationFailedException::class);
         $validator->validate($input);
     }
 

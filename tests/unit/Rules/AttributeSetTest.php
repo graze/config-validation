@@ -43,38 +43,35 @@ class AttributeSetTest extends TestCase
         $this->assertSame(current($rules), $attribute);
     }
 
-    /**
-     * @expectedException \Respect\Validation\Exceptions\ComponentException
-     * @expectedExceptionMessage AllOf rule must have only one Attribute rule
-     */
     public function testShouldNotAcceptAllOfWithMoreThanOneAttributeRule()
     {
         $attribute1 = new Attribute('foo', new AlwaysValid(), false);
         $attribute2 = new Attribute('bar', new AlwaysValid(), false);
         $allOf = new AllOf($attribute1, $attribute2);
 
+        $this->expectException(\Respect\Validation\Exceptions\ComponentException::class);
+        $this->expectExceptionMessage('AllOf rule must have only one Attribute rule');
+
         new AttributeSet($allOf);
     }
 
-    /**
-     * @expectedException \Respect\Validation\Exceptions\ComponentException
-     * @expectedExceptionMessage AttributeSet rule accepts only Attribute rules
-     */
     public function testShouldNotAcceptAllOfWithANonAttributeRule()
     {
         $alwaysValid = new AlwaysValid();
         $allOf = new AllOf($alwaysValid);
 
+        $this->expectException(\Respect\Validation\Exceptions\ComponentException::class);
+        $this->expectExceptionMessage('AttributeSet rule accepts only Attribute rules');
+
         new AttributeSet($allOf);
     }
 
-    /**
-     * @expectedException \Respect\Validation\Exceptions\ComponentException
-     * @expectedExceptionMessage AttributeSet rule accepts only Attribute rules
-     */
     public function testShouldNotAcceptANonAttributeRule()
     {
         $alwaysValid = new AlwaysValid();
+
+        $this->expectException(\Respect\Validation\Exceptions\ComponentException::class);
+        $this->expectExceptionMessage('AttributeSet rule accepts only Attribute rules');
 
         new AttributeSet($alwaysValid);
     }
@@ -145,10 +142,6 @@ class AttributeSetTest extends TestCase
         $this->assertFalse($attributeSet->validate($input));
     }
 
-    /**
-     * @expectedException \Respect\Validation\Exceptions\AttributeException
-     * @expectedExceptionMessage Attribute foo must be present
-     */
     public function testShouldCheckAttributesAndUseChildValidators()
     {
         $input = (object) [];
@@ -157,6 +150,10 @@ class AttributeSetTest extends TestCase
         $attribute2 = new Attribute('bar', new AlwaysValid(), true);
 
         $attributeSet = new AttributeSet($attribute1, $attribute2);
+
+        $this->expectException(\Respect\Validation\Exceptions\AttributeException::class);
+        $this->expectExceptionMessage('Attribute foo must be present');
+
         $attributeSet->check($input);
     }
 
@@ -179,7 +176,7 @@ class AttributeSetTest extends TestCase
         } catch (AttributeSetException $e) {
             $this->assertEquals(
                 <<<ERR
-- Must not have unknown attributes { "baz" }
+- Must not have unknown attributes `{ "baz" }`
 ERR
                 ,
                 $e->getFullMessage()
@@ -204,7 +201,8 @@ ERR
         } catch (AttributeSetException $e) {
             $this->assertEquals(
                 <<<ERR
-- Attribute foo must be present
+- These rules must pass for `[object] (stdClass: { })`
+  - Attribute foo must be present
 ERR
                 ,
                 $e->getFullMessage()
@@ -239,6 +237,8 @@ ERR
 
         $attributeSet = new AttributeSet($attribute1, $attribute2);
 
-        $this->assertTrue($attributeSet->assert($input));
+        // assert() now returns void in respect/validation 2.x; passing means no exception is thrown
+        $attributeSet->assert($input);
+        $this->addToAssertionCount(1);
     }
 }

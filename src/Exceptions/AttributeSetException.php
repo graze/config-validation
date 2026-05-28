@@ -17,12 +17,14 @@ use Respect\Validation\Exceptions\GroupedValidationException;
 
 class AttributeSetException extends GroupedValidationException
 {
-    const STRUCTURE = 2;
+    public const STRUCTURE = 'structure';
 
     /**
+     * {@inheritdoc}
+     *
      * @var array
      */
-    public static $defaultTemplates = [
+    protected $defaultTemplates = [
         self::MODE_DEFAULT  => [
             self::NONE      => 'All of the required rules must pass for {{name}}',
             self::SOME      => 'These rules must pass for {{name}}',
@@ -38,10 +40,10 @@ class AttributeSetException extends GroupedValidationException
     /**
      * {@inheritdoc}
      */
-    public function chooseTemplate()
+    protected function chooseTemplate(): string
     {
         if ($this->getParam('attributes')) {
-            return static::STRUCTURE;
+            return self::STRUCTURE;
         }
 
         return parent::chooseTemplate();
