@@ -44,9 +44,6 @@ jobs:
           coverage: none
           tools: composer:v2
 
-      - name: Pin composer platform to the runner PHP version
-        run: composer config platform.php ${{ matrix.php }}
-
       - name: Install dependencies (highest)
         if: matrix.dependencies == 'highest'
         run: composer update --no-interaction --no-progress --prefer-dist
