@@ -25,6 +25,19 @@ use Respect\Validation\Validatable;
 class AttributeSet extends AllOf
 {
     /**
+     * The parent constructor assigns the variadic rules directly to the stack without routing them through
+     * addRule(), so we override it to run our Attribute/AllOf filtering (and to accept nested arrays of rules).
+     *
+     * @param mixed ...$rules
+     *
+     * @throws ComponentException
+     */
+    public function __construct(...$rules)
+    {
+        $this->addRules($rules);
+    }
+
+    /**
      * @param AllOf $rule
      *
      * @return Validatable
@@ -43,14 +56,12 @@ class AttributeSet extends AllOf
     /**
      * {@inheritdoc}
      *
-     * @param mixed $rule
-     * @param array $arguments
+     * @param Validatable $rule
      *
-     * @return $this
+     * @return AttributeSet
      * @throws ComponentException
      */
-    // @codingStandardsIgnoreLine
-    public function addRule($rule, $arguments = [])
+    public function addRule(Validatable $rule): self
     {
         if ($rule instanceof AllOf) {
             $rule = $this->filterAllOf($rule);
@@ -60,20 +71,18 @@ class AttributeSet extends AllOf
             throw new ComponentException('AttributeSet rule accepts only Attribute rules');
         }
 
-        $this->appendRule($rule);
+        parent::addRule($rule);
 
         return $this;
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @param array $rules
      *
-     * @return $this
+     * @return AttributeSet
      * @throws ComponentException
      */
-    public function addRules(array $rules)
+    public function addRules(array $rules): self
     {
         foreach ($rules as $rule) {
             if (is_array($rule)) {
@@ -93,7 +102,7 @@ class AttributeSet extends AllOf
     {
         $keys = [];
         foreach ($this->getRules() as $attributeRule) {
-            $keys[] = $attributeRule->reference;
+            $keys[] = $attributeRule->getReference();
         }
 
         return $keys;
@@ -109,8 +118,8 @@ class AttributeSet extends AllOf
         $mirror = ($input) ? (array)$input : [];
 
         foreach ($this->getRules() as $attributeRule) {
-            if (array_key_exists($attributeRule->reference, $mirror)) {
-                unset($mirror[$attributeRule->reference]);
+            if (array_key_exists($attributeRule->getReference(), $mirror)) {
+                unset($mirror[$attributeRule->getReference()]);
             }
         }
 
@@ -153,37 +162,34 @@ class AttributeSet extends AllOf
      * {@inheritdoc}
      *
      * @param mixed $input
-     *
-     * @return bool
      */
-    public function assert($input)
+    public function assert($input): void
     {
         $this->checkAttributes($input);
 
-        return parent::assert($input);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @param mixed $input
-     *
-     * @return bool
-     */
-    public function check($input)
-    {
-        $this->checkAttributes($input);
-
-        return parent::check($input);
+        parent::assert($input);
     }
 
     /**
      * {@inheritdoc}
      *
      * @param mixed $input
+     */
+    public function check($input): void
+    {
+        $this->checkAttributes($input);
+
+        parent::check($input);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param mixed $input
      *
      * @return bool
      */
-    public function validate($input)
+    public function validate($input): bool
     {
         if (!$this->hasValidStructure($input)) {
             return false;

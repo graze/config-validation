@@ -4,7 +4,7 @@
     <rule ref="vendor/graze/standards/PHP/CodeSniffer/Graze/ruleset.xml" />
 
     <rule ref="Squiz.Commenting.FunctionComment">
-        <!-- excluded because it can't be used for both php 5 and 7 -->
+        <!-- excluded to avoid forcing type hints across the existing public API -->
         <exclude name="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing" />
         <exclude name="Squiz.Commenting.FunctionComment.TypeHintMissing" />
     </rule>

@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/graze/config-validation.svg?style=flat-square)](https://packagist.org/packages/graze/config-validation)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/graze/config-validation/master.svg?style=flat-square)](https://travis-ci.org/graze/config-validation)
+[![CI](https://github.com/graze/config-validation/actions/workflows/ci.yml/badge.svg)](https://github.com/graze/config-validation/actions/workflows/ci.yml)
 [![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/graze/config-validation.svg?style=flat-square)](https://scrutinizer-ci.com/g/graze/config-validation/code-structure)
 [![Quality Score](https://img.shields.io/scrutinizer/g/graze/config-validation.svg?style=flat-square)](https://scrutinizer-ci.com/g/graze/config-validation)
 [![Total Downloads](https://img.shields.io/packagist/dt/graze/config-validation.svg?style=flat-square)](https://packagist.org/packages/graze/config-validation)

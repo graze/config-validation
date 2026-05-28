@@ -164,7 +164,7 @@ trait ValidatorBuilderTrait
      *
      * @return Validatable
      */
-    protected abstract function buildValidator(array $definition, $namePrefix = '');
+    abstract protected function buildValidator(array $definition, $namePrefix = '');
 
     /**
      * Traverse the definition to see if any children are required

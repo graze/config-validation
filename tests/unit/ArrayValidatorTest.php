@@ -93,7 +93,6 @@ class ArrayValidatorTest extends TestCase
      * @param array $input
      *
      * @throws \Graze\ConfigValidation\Exceptions\ConfigValidationFailedException
-     * @expectedException \Graze\ConfigValidation\Exceptions\ConfigValidationFailedException
      */
     public function testFailedValidation(array $input)
     {
@@ -103,6 +102,8 @@ class ArrayValidatorTest extends TestCase
             ->required('must', v::stringType()->equals('be here'));
 
         $this->assertFalse($validator->isValid($input));
+
+        $this->expectException(\Graze\ConfigValidation\Exceptions\ConfigValidationFailedException::class);
         $validator->validate($input);
     }
 
@@ -126,7 +127,6 @@ class ArrayValidatorTest extends TestCase
      * @param array $input
      *
      * @throws \Graze\ConfigValidation\Exceptions\ConfigValidationFailedException
-     * @expectedException \Graze\ConfigValidation\Exceptions\ConfigValidationFailedException
      */
     public function testDoNotAllowUnspecified(array $input)
     {
@@ -136,6 +136,7 @@ class ArrayValidatorTest extends TestCase
 
         $this->assertFalse($validator->isAllowUnspecified());
 
+        $this->expectException(\Graze\ConfigValidation\Exceptions\ConfigValidationFailedException::class);
         $validator->validate($input);
     }
 
